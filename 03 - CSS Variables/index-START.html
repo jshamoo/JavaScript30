@@ -42,9 +42,44 @@
     input {
       width: 100px;
     }
+
   </style>
 
   <script>
+    const img = document.querySelector('img');
+
+    let defaultSpacing = document.querySelector('input[id=spacing]').getAttribute('value');
+    let spacingUnit = document.querySelector('input[id=spacing]').getAttribute('data-sizing');
+
+    let defaultBlur = document.querySelector('input[id=blur]').getAttribute('value');
+    let blurUnit = document.querySelector('input[id=blur]').getAttribute('data-sizing');
+
+    let defaultColor = document.querySelector('input[id=base]').getAttribute('value');
+
+    // set the default value
+    img.style.border = `${defaultSpacing}${spacingUnit} solid ${defaultColor}`;
+    img.style.filter = `blur(${defaultBlur}${blurUnit})`;
+
+    // handle change
+    const controlPanel = document.querySelector('.controls');
+
+    controlPanel.addEventListener('change', (e) => {
+      if (e.target.name === 'spacing') {
+        let newSpacing = e.target.value;
+        defaultSpacing = newSpacing;
+        img.style.border = `${newSpacing}${spacingUnit} solid ${defaultColor}`;
+      }
+      if (e.target.name === 'blur') {
+        let newBlur = e.target.value;
+        defaultBlur = newBlur;
+        img.style.filter = `blur(${newBlur}${blurUnit})`;
+      }
+      if (e.target.name === 'base') {
+        let newColor = e.target.value;
+        defaultColor = newColor;
+        img.style.border = `${defaultSpacing}${spacingUnit} solid ${newColor}`;
+      }
+    })
   </script>
 
 </body>
