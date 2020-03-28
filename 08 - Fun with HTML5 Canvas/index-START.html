@@ -7,13 +7,118 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 100;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+  function draw(e) {
+    if (!isDrawing) return;
+    console.log(e);
+    ctx.strokeStyle = `hsl(${hue}, 60%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    hue++;
+    if (hue >= 360 ) {
+      hue = 0;
+    }
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    if (direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+  // canvas.addEventListener('mousedown', drawRect);
+  // canvas.addEventListener('mousedown', drawPathTriangle);
+  // canvas.addEventListener('mousedown', drawPathSmile);
+
+
+  function getRandomNum(max, min) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  function drawRect() {
+    ctx.fillStyle = 'rgb(200, 5, 123)';
+    const x = getRandomNum(800, 10);
+    const y = getRandomNum(800, 10);
+    const w = getRandomNum(30, 10);
+    const h = getRandomNum(30, 10);
+    // console.log(x, y, w, h);
+    ctx.fillRect(75, 75, 80, 80);
+    ctx.fillRect(100, 75, 70, 70);
+    ctx.clearRect(45, 45, 60, 60);
+    ctx.strokeRect(50, 50, 20, 20);
+  }
+
+  function drawPathTriangle() {
+    ctx.beginPath();
+    // move your pen to the cordinates
+    ctx.moveTo(75, 50);
+    // draw line from current cordniates (75, 50) to the specified cord (100, 25)
+    ctx.lineTo(100, 25);
+    ctx.lineTo(100, 75);
+    // fill the back
+    ctx.fill();
+
+    // if want to use stroke, must closePath for the open path
+    // ctx.closePath();
+    // ctx.stroke();
+  }
+
+  function drawPathSmile() {
+    ctx.beginPath();
+    // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    /*
+    Angles in the arc function are measured in radians, not degrees. To convert degrees to radians you can use the following JavaScript expression: radians = (Math.PI/180)*degrees.
+    */
+    ctx.arc(75, 75, 50, 0, Math.PI * 2, true);
+    ctx.moveTo(100, 75);
+    ctx.arc(75, 75, 35, 0, Math.PI, false);
+    ctx.moveTo(65, 65);
+    ctx.arc(65, 65, 5, 0, Math.PI * 2, true);
+    ctx.moveTo(95, 65);
+    ctx.arc(90, 65, 5, 0, Math.PI * 2, true);
+    ctx.stroke();
+  }
+
+
+
 </script>
 
 <style>
   html, body {
     margin: 0;
   }
+  canvas {
+    border: 1px solid green;
+  }
 </style>
-
 </body>
 </html>
